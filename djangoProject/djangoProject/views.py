@@ -1,13 +1,16 @@
 # your_app/views.py
-from rest_framework.views import APIView
-from rest_framework.response import Response
+import datetime
+import jwt
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.models import Token
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .authentication import GetMethodTokenAuthentication
 from .models import BlogPost, Host
 from .serializers import YourModelSerializer, HostSerializer
-from .authentication import GetMethodTokenAuthentication
-from rest_framework.authtoken.models import Token
-from django.contrib.auth import get_user_model
 
 
 class YourModelAPIView(APIView):
@@ -46,19 +49,26 @@ class HostAPIView(APIView):
 
 class HostLoginAPIView(APIView):
     def post(self, request):
-        email = request.data.get('email')
-        password = request.data.get('password')
+        email = request.data['email']
+        password = request.data['password']
+        data = Host.objects.filter(email=email).first()
+        user = Host.objects.filter(email=email, password=password).exists()
 
-        if email and password:
-            # Host = get_user_model()
-            user_queryset = Host.objects.filter(email=email, password=password)
-            if user_queryset.exists():
-                # User is authenticated
-                user = Host.objects.all()
-                print(user, user_queryset)
-                token, created = Token.objects.get_or_create(user=user)
-                return Response({'token': token.key, 'message': "LoggedIn"})
-            else:
-                return Response({'error': 'Invalid email or password.'}, status=400)
+        if not user:
+            raise AuthenticationFailed('Incorrect Email or Password')
         else:
-            return Response({'error': 'Both email and password are required.'}, status=400)
+            payload = {
+                'id': data.id,
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+                'iat': datetime.datetime.utcnow()
+            }
+
+            token = jwt.encode(payload, 'secret', algorithm='HS256').decode('utf-8')
+
+            response = Response()
+
+            response.set_cookie(key='jwt', value=token, httponly=True)
+            response.data = {
+                'token': token
+            }
+            return response
