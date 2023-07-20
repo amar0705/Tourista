@@ -16,7 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from djangoProject.views import YourModelAPIView, HostAPIView, HostLoginAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('host/', HostAPIView.as_view()),
+    path('host/login', HostLoginAPIView.as_view()),
 ]
