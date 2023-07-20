@@ -5,3 +5,6 @@
 <p align="center">
   <img src="tourista.png" alt="Image" width="300" height="300" />
 </p>
+<br><br>
+<h2 align="center">Tech Stack</h2>
+
