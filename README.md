@@ -9,9 +9,11 @@
 <h2 align="center">Tech Stack</h2>
 
 <div style="display: flex; justify-content: space-between;">
-  <img src="assets/react.png" alt="Image 1" style="width: 30%; height: auto;">
-  <img src="assets/django.png" alt="Image 2" style="width: 30%; height: 150px;">
-  <img src="assets/mysql.png" alt="Image 3" style="width: 30%; height: 150px;">
+  <img src="assets/react.png" alt="Image 1" style="width: 24%; height: auto;">
+  <img src="assets/django.png" alt="Image 2" style="width: 24%; height: 150px;">
+  <img src="assets/mysql.png" alt="Image 3" style="width: 24%; height: 150px;">
+    <img src="assets/mui.png" alt="Image 3" style="width: 24%; height: 150px;">
+
 </div>
 
 
