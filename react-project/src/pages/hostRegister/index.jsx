@@ -196,7 +196,17 @@ export default function HostRegister() {
                 />
               </Grid>
             </Grid>
-            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{
+                mt: 3,
+                mb: 2,
+                backgroundColor: "#1bb389", // Set the background color to purple
+                color: "white", // Set the text color to white
+              }}
+            >
               Sign Up
             </Button>
             <Grid container justifyContent="flex-end">
