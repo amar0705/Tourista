@@ -84,7 +84,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== "open" 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function Dashboard() {
+export default function Dashboard(props) {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -142,7 +142,7 @@ export default function Dashboard() {
             {secondaryListItems}
           </List>
         </Drawer>
-        <Box
+        {/* <Box
           component="main"
           sx={{
             backgroundColor: (theme) =>
@@ -155,7 +155,6 @@ export default function Dashboard() {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              {/* Chart */}
               <Grid item xs={12} md={8} lg={9}>
                 <Paper
                   sx={{
@@ -165,10 +164,8 @@ export default function Dashboard() {
                     height: 240,
                   }}
                 >
-                  {/* <Chart /> */}
                 </Paper>
               </Grid>
-              {/* Recent Deposits */}
               <Grid item xs={12} md={4} lg={3}>
                 <Paper
                   sx={{
@@ -178,18 +175,29 @@ export default function Dashboard() {
                     height: 240,
                   }}
                 >
-                  {/* <Deposits /> */}
                 </Paper>
               </Grid>
-              {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                  {/* <Orders /> */}
                 </Paper>
               </Grid>
             </Grid>
             <Copyright sx={{ pt: 4 }} />
           </Container>
+        </Box> */}
+        <Box
+          component="main"
+          sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],
+            flexGrow: 1,
+            height: "100vh",
+            overflow: "auto",
+          }}
+        >
+          <Box sx={{ mt: 10, mr: 2, ml: 2 }} justifyContent="center">
+            {props.children}
+          </Box>
         </Box>
       </Box>
     </ThemeProvider>

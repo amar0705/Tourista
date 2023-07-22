@@ -16,6 +16,7 @@ import logo from "../../assets/tourista.png";
 import { callApi } from "../../api";
 import { useState } from "react";
 import _ from "lodash";
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -35,6 +36,7 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function HostLogin() {
+  const history = useNavigate();
   const [errorStates, setErrorStates] = useState({
     email: "",
     password: "",
@@ -87,6 +89,8 @@ export default function HostLogin() {
     try {
       const result = await callApi("/host/login", "POST", data);
       console.log(result);
+      localStorage.setItem("token", result.token);
+      history("/host/property-details");
     } catch (error) {
       console.log(error);
     }
@@ -159,7 +163,17 @@ export default function HostLogin() {
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{
+                  mt: 3,
+                  mb: 2,
+                  backgroundColor: "#1bb389",
+                  color: "white",
+                }}
+              >
                 Sign In
               </Button>
               <Grid container>

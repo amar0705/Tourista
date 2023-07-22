@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import HostDashboard from "./pages/hostDashboard";
 import HostLogin from "./pages/hostLogin";
+import HostPropertyDetails from "./pages/hostPropertyDetails";
 import HostRegister from "./pages/hostRegister";
 
 export const router = createBrowserRouter([
@@ -19,5 +20,13 @@ export const router = createBrowserRouter([
   {
     path: "/host/properties",
     element: <HostDashboard />,
+  },
+  {
+    path: "/host/property-details",
+    element: (
+      <HostDashboard>
+        <HostPropertyDetails />
+      </HostDashboard>
+    ),
   },
 ]);
