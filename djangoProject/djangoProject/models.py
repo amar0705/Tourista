@@ -22,5 +22,39 @@ class Host(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
+    USERNAME_FIELD = 'email'
+
     def __str__(self):
         return self.name
+
+
+class Location(models.Model):
+    state = models.TextField()
+    city = models.TextField()
+
+    def __str__(self):
+        return self.city
+
+
+class PropertyType(models.Model):
+    name = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+
+class Property(models.Model):
+    property = models.TextField()
+    host = models.ForeignKey(Host, on_delete=models.CASCADE)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    property_type = models.ForeignKey(PropertyType, on_delete=models.CASCADE)
+    total_bedrooms = models.IntegerField()
+    summary = models.TextField()
+    address = models.TextField()
+    price = models.IntegerField()
+    hosted_since = models.DateTimeField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.property
