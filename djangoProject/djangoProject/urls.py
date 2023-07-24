@@ -16,11 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from djangoProject.views import YourModelAPIView, HostAPIView, HostLoginAPIView, HostPropertyAPIView
+from djangoProject.views import YourModelAPIView, HostAPIView, LoginAPIView, HostPropertyAPIView, LogoutAPIView, \
+    PropertyTypeAPIView, StateAPIView, CityAPIView, GuestAPIView, AllPropertiesAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('host/', HostAPIView.as_view()),
-    path('host/login', HostLoginAPIView.as_view()),
-    path('host/property', HostPropertyAPIView.as_view())
+    path('guest/', GuestAPIView.as_view()),
+    path('login/', LoginAPIView.as_view()),
+    path('host/property', HostPropertyAPIView.as_view()),
+    path('host/property/<int:task_id>/', HostPropertyAPIView.as_view()),
+    path('host/logout', LogoutAPIView.as_view()),
+    path('state/', StateAPIView.as_view()),
+    path('city/', CityAPIView.as_view()),
+    path('property_type/', PropertyTypeAPIView.as_view()),
+    path('properties/', AllPropertiesAPIView.as_view())
 ]

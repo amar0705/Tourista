@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'djangoProject.jwt_authenticate.CustomJWTAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         # other authentication classes if needed
     ),
@@ -88,7 +89,7 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'hotel_management',
+        'NAME': 'tourista',
         'HOST': '127.0.0.1',  # If the database is on a different host, provide the appropriate IP/hostname
         'PORT': '3307',
     },

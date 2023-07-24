@@ -35,7 +35,7 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function HostLogin() {
+export default function HostLogin({ userType }) {
   const history = useNavigate();
   const [errorStates, setErrorStates] = useState({
     email: "",
@@ -86,11 +86,15 @@ export default function HostLogin() {
   };
 
   const fetchData = async (data) => {
+    const obj = { ...data, user_type: userType };
     try {
-      const result = await callApi("/host/login", "POST", data);
+      const result = await callApi("/login/", "POST", obj);
       console.log(result);
       localStorage.setItem("token", result.token);
-      history("/host/property-details");
+      localStorage.setItem("user_id", result.user_id);
+      localStorage.setItem("user_type", userType);
+
+      history(userType === "HOST" ? "/host/property-details" : "/all-properties");
     } catch (error) {
       console.log(error);
     }

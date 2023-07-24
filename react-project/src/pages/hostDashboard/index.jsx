@@ -18,6 +18,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { mainListItems, secondaryListItems } from "./listItems";
+import { useLocation, useNavigate } from "react-router-dom";
+import MenuDropdown from "../../components/HostDashboard/MenuDropdown";
 // import Chart from "./Chart";
 // import Deposits from "./Deposits";
 // import Orders from "./Orders";
@@ -85,9 +87,22 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== "open" 
 const defaultTheme = createTheme();
 
 export default function Dashboard(props) {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  React.useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/host/login");
+    }
+  }, []);
+
+  const getTitlePage = () => {
+    const str = location.pathname.replace("/host/", "").replace("-", " ");
+    return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
   return (
@@ -113,13 +128,9 @@ export default function Dashboard(props) {
               <MenuIcon />
             </IconButton>
             <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-              Dashboard
+              {getTitlePage()}
             </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            <MenuDropdown />
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -139,7 +150,6 @@ export default function Dashboard(props) {
           <List component="nav">
             {mainListItems}
             <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
           </List>
         </Drawer>
         {/* <Box

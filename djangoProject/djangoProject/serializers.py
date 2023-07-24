@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import BlogPost, Property
+from .models import BlogPost, Property, Guest
 from .models import Host
 
 
@@ -15,7 +15,13 @@ class HostSerializer(serializers.ModelSerializer):
         fields = ['name', 'email', 'phone', 'password']
 
 
+class GuestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Guest
+        fields = ['name', 'email', 'phone', 'password']
+
+
 class PropertySerializer(serializers.ModelSerializer):
     class Meta:
         model = Property
-        fields = ['property', 'host', 'location', 'property_type', 'total_bedrooms', 'price']
+        fields = ['property', 'host', 'state', 'city', 'property_type', 'total_bedrooms', 'price', 'address']

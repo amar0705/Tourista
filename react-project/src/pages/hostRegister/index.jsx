@@ -16,6 +16,7 @@ import logo from "../../assets/tourista.png";
 import { callApi } from "../../api";
 import { useState } from "react";
 import _ from "lodash";
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -32,7 +33,8 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function HostRegister() {
+export default function HostRegister({ userType }) {
+  const history = useNavigate();
   const [errorStates, setErrorStates] = useState({ name: "", email: "", phone: "", password: "" });
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -106,8 +108,8 @@ export default function HostRegister() {
 
   const fetchData = async (data) => {
     try {
-      const result = await callApi("/host/", "POST", data);
-      console.log(result);
+      const result = await callApi(userType === "HOST" ? "/host/" : "/guest/", "POST", data);
+      history(userType === "HOST" ? "/host/login" : "/guest/login");
     } catch (error) {
       console.log(error);
     }

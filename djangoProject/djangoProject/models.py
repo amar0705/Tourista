@@ -27,6 +27,43 @@ class Host(models.Model):
     def __str__(self):
         return self.name
 
+    def is_authenticated(self):
+        return True
+
+
+class Guest(models.Model):
+    name = models.CharField(max_length=200)
+    email = models.EmailField(max_length=100)
+    password = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+    phone = models.IntegerField()
+    bio = models.TextField()
+    profile_image = models.URLField()
+    dob = models.DateField(null=True)
+
+    USERNAME_FIELD = 'email'
+
+    def __str__(self):
+        return self.name
+
+    def is_authenticated(self):
+        return True
+
+
+class State(models.Model):
+    state = models.TextField()
+
+    def __str__(self):
+        return self.state
+
+
+class City(models.Model):
+    state = models.ForeignKey(State, on_delete=models.CASCADE)
+    city = models.TextField()
+
+    def __str__(self):
+        return self.city
 
 class Location(models.Model):
     state = models.TextField()
@@ -46,7 +83,8 @@ class PropertyType(models.Model):
 class Property(models.Model):
     property = models.TextField()
     host = models.ForeignKey(Host, on_delete=models.CASCADE)
-    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+    state = models.ForeignKey(State, on_delete=models.CASCADE)
     property_type = models.ForeignKey(PropertyType, on_delete=models.CASCADE)
     total_bedrooms = models.IntegerField()
     summary = models.TextField()
@@ -58,3 +96,12 @@ class Property(models.Model):
 
     def __str__(self):
         return self.property
+
+
+class RevokedToken(models.Model):
+    token = models.CharField(max_length=255, unique=True)
+    reason = models.CharField(max_length=255, blank=True, null=True)
+    revoked_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.token

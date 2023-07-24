@@ -33,7 +33,7 @@ const columns = [
   },
 ];
 
-const rows = [
+const row = [
   { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
   { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
   { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
@@ -45,12 +45,12 @@ const rows = [
   { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
 ];
 
-export default function DataGridDemo({ row, cols }) {
+export default function DataGridDemo({ rows, cols }) {
   return (
     <Box sx={{ height: 400, width: "100%" }}>
       <DataGrid
         rows={rows}
-        columns={columns}
+        columns={cols}
         initialState={{
           pagination: {
             paginationModel: {
@@ -59,7 +59,6 @@ export default function DataGridDemo({ row, cols }) {
           },
         }}
         pageSizeOptions={[5]}
-        checkboxSelection
         disableRowSelectionOnClick
       />
     </Box>

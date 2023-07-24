@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8000";
+export const BASE_URL = "http://localhost:8000";
 
 const apiWithAuth = axios.create({
   baseURL: BASE_URL,
@@ -16,6 +16,7 @@ const api = axios.create({
 export const callApi = async (endpoint, method = "GET", data = null, headers = false) => {
   try {
     let response;
+    localStorage.getItem("token");
     if (headers) {
       response = await apiWithAuth({
         url: endpoint,
