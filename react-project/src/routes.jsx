@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
-import AllProperties from "./components/AllProperties";
+import AllProperties from "./pages/AllProperties";
 import HomeLayout from "./pages/Home";
+import HomeSection from "./pages/Home/homePage";
 import HostDashboard from "./pages/hostDashboard";
 import HostLogin from "./pages/hostLogin";
 import HostPropertyDetails from "./pages/hostPropertyDetails";
@@ -34,7 +35,7 @@ export const router = createBrowserRouter([
   {
     path: "/all-properties",
     element: (
-      <HomeLayout>
+      <HomeLayout makeMargin={true}>
         <AllProperties />
       </HomeLayout>
     ),
@@ -45,6 +46,14 @@ export const router = createBrowserRouter([
       <HostDashboard>
         <HostPropertyDetails />
       </HostDashboard>
+    ),
+  },
+  {
+    path: "/",
+    element: (
+      <HomeLayout makeMargin={false}>
+        <HomeSection></HomeSection>
+      </HomeLayout>
     ),
   },
 ]);

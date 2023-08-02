@@ -29,7 +29,7 @@ export default function MenuDropdown() {
   const logout = async () => {
     handleClose();
     try {
-      const result = await axios.post(`${BASE_URL}/host/logout`, null, {
+      const result = await axios.post(`${BASE_URL}/logout/`, null, {
         headers: { Authorization: localStorage.getItem("token") },
       });
       console.log(result);

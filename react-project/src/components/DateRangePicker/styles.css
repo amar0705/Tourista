@@ -1,0 +1,15 @@
+.react-daterange-picker__wrapper {
+  border-radius: 30px;
+  height: 40px;
+}
+
+.react-daterange-picker__inputGroup {
+  color: #6b6767;
+}
+
+.react-daterange-picker,
+.react-daterange-picker *,
+.react-daterange-picker *:before,
+.react-daterange-picker *:after {
+  width: 100%;
+}

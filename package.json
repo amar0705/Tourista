@@ -1,6 +1,10 @@
 {
   "dependencies": {
+    "@mui/x-date-pickers": "^6.10.2",
+    "@mui/x-date-pickers-pro": "^6.10.2",
     "react-alert": "^7.0.3",
-    "react-alert-template-basic": "^1.0.2"
+    "react-alert-template-basic": "^1.0.2",
+    "react-date-range": "^1.4.0",
+    "react-datepicker": "^4.16.0"
   }
 }
