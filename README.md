@@ -12,10 +12,16 @@
   <img src="assets/react.png" alt="Image 1" style="width: 24%; height: auto;">
   <img src="assets/django.png" alt="Image 2" style="width: 24%; height: 150px;">
   <img src="assets/mysql.png" alt="Image 3" style="width: 24%; height: 150px;">
-    <img src="assets/mui.png" alt="Image 3" style="width: 24%; height: 150px;">
-
+  <img src="assets/mui.png" alt="Image 3" style="width: 24%; height: 150px;">
 </div>
 
+<div>
+  <h3 align="center">Frontend : React</h3>
+  <h3 align="center">Backend : Django</h3>
+  <h3 align="center">Database : mySQL</h3>
+  <h3 align="center">External Library : Material UI</h3>
+</div>
 
+<br><br>
 
-
+<h2 align="center">Screenshots</h2>
