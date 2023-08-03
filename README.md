@@ -25,3 +25,7 @@
 <br><br>
 
 <h2 align="center">Screenshots</h2>
+  <h3 align="left">Signup Page</h3>
+  <img src="assets/signup-ss.png" alt="Image 1" width="100%">
+  <h3 align="left">Login Page</h3>
+  <img src="assets/login-ss.png" alt="Image 1" width="100%">
