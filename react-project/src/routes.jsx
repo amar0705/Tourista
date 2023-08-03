@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import Booking from "./components/Booking";
 import AllProperties from "./pages/AllProperties";
 import HomeLayout from "./pages/Home";
 import HomeSection from "./pages/Home/homePage";
@@ -53,6 +54,14 @@ export const router = createBrowserRouter([
     element: (
       <HomeLayout makeMargin={false}>
         <HomeSection></HomeSection>
+      </HomeLayout>
+    ),
+  },
+  {
+    path: "/booking",
+    element: (
+      <HomeLayout makeMargin={true}>
+        <Booking></Booking>
       </HomeLayout>
     ),
   },
