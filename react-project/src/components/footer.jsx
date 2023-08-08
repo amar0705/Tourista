@@ -24,7 +24,13 @@ export default function Footer() {
     <>
       <Box
         bgcolor="#505050"
-        sx={{ display: "flex", flexDirection: "column", height: "100px", color: "white" }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100px",
+          color: "white",
+          fontFamily: "fantasy",
+        }}
       >
         <Box
           sx={{
@@ -62,16 +68,26 @@ export default function Footer() {
               mr: 2,
             }}
           >
-            <Typography variant="h5">World's leading chain of hotels and homes</Typography>
-            <Typography variant="h5">Join our network and grow your business!</Typography>
+            <Typography variant="h5" sx={{ fontFamily: "fantasy" }}>
+              World's leading chain of hotels and homes
+            </Typography>
+            <Typography variant="h5" sx={{ fontFamily: "fantasy" }}>
+              Join our network and grow your business!
+            </Typography>
           </Box>
         </Box>
         <Divider color="white"></Divider>
         <Box bgcolor="#505050" mt={2} pb={2}>
           <Grid container spacing={2} sx={{ width: "90%", margin: "auto" }}>
             <Grid item md={4} sx={{ borderRight: "1px solid white" }}>
-              <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                <Typography>Download our App</Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
+              >
+                <Typography sx={{ fontFamily: "fantasy" }}>Download our App</Typography>
                 <Box sx={{ display: "flex", flexDirection: "row", gap: "10px" }}>
                   <img src={android} alt="and" width="130px"></img>
                   <img src={apple} alt="and" width="120px"></img>
@@ -140,7 +156,9 @@ export default function Footer() {
               <YouTubeIcon color="white"></YouTubeIcon>
               <PinterestIcon color="white"></PinterestIcon>
             </Box>
-            <Typography variant="body2">2020-2022 © Tourista Stays Limited</Typography>
+            <Typography variant="body2" sx={{ fontFamily: "fantasy" }}>
+              2020-2022 © Tourista Stays Limited
+            </Typography>
           </Box>
         </Box>
       </Box>

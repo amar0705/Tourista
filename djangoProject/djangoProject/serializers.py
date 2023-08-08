@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import BlogPost, Property, Guest
+from .models import BlogPost, Property, Guest, Booking
 from .models import Host
 
 
@@ -25,3 +25,9 @@ class PropertySerializer(serializers.ModelSerializer):
     class Meta:
         model = Property
         fields = ['property', 'host', 'state', 'city', 'property_type', 'total_bedrooms', 'price', 'address']
+
+
+class BookingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = '__all__'

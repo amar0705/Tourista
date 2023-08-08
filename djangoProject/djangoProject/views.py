@@ -11,11 +11,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, F, Sum
 
 from .authentication import GetMethodTokenAuthentication
-from .models import BlogPost, Host, Property, RevokedToken, State, City, PropertyType, Guest
-from .serializers import YourModelSerializer, HostSerializer, PropertySerializer, GuestSerializer
+from .models import BlogPost, Host, Property, RevokedToken, State, City, PropertyType, Guest, Booking
+from .serializers import YourModelSerializer, HostSerializer, PropertySerializer, GuestSerializer, BookingSerializer
 from rest_framework.response import Response
 from rest_framework.authentication import get_authorization_header
 from django.core.paginator import Paginator
@@ -283,68 +283,116 @@ class GuestAPIView(APIView):
 
 class AllPropertiesAPIView(APIView):
     def get(self, request):
-        # Get the query parameters from the URL
-        property_type = request.query_params.get('property_type')
-        city = request.query_params.get('city')
-        price = request.query_params.get('price')
-        search = request.query_params.get('search')
-        sort = request.query_params.get('sort')
-        # Start with all objects
-        queryset = Property.objects.all()
+        property_id = request.query_params.get('property_id')
+        if property_id:
+            queryset = Property.objects.filter(id=property_id)
+            property_dict = {}
+            for i in queryset:
+                property_dict = {
+                    'id': i.id,
+                    'property': i.property,
+                    'host': i.host.id,
+                    'location': dict(id=i.city.id, city=i.city.city, state_id=i.state.id, state=i.state.state),
+                    'property_type': dict(id=i.property_type.id, name=i.property_type.name),
+                    'total_bedrooms': i.total_bedrooms,
+                    'summary': i.summary,
+                    'address': i.address,
+                    'price': i.price,
+                    'hosted_since': i.hosted_since,
+                    'created_at': i.created_at,
+                    'updated_at': i.updated_at
+                    # Add other fields as needed
+                }
+            return Response(property_dict)
+        else:
+            # Get the query parameters from the URL
+            property_type = request.query_params.get('property_type')
+            city = request.query_params.get('city')
+            price = request.query_params.get('price')
+            search = request.query_params.get('search')
+            sort = request.query_params.get('sort')
+            start_date = request.query_params.get('start_date')
+            end_date = request.query_params.get('end_date')
+            # Start with all objects
+            queryset = Property.objects.exclude(booking__start_date__lt=end_date, booking__end_date__gt=start_date)\
+                .annotate(total_rooms_booked=Sum('booking__rooms_booked')).filter(total_rooms_booked__lt=F('total_bedrooms'))
 
-        # Apply filters if they are present in the URL parameters
-        if search:
-            queryset = queryset.filter(property__icontains=search)
-        if property_type:
-            queryset = queryset.filter(property_type=property_type)
-        if city:
-            queryset = queryset.filter(city=city)
-        if price:
-            prices = price.split(',')
-            if '0' in prices:
-                queryset = queryset.filter(Q(price__lte=500))
-            if '1' in prices:
-                queryset = queryset.filter(Q(price__gte=501) & Q(price__lte=1200))
-            if '2' in prices:
-                queryset = queryset.filter(Q(price__gte=1201) & Q(price__lte=2000))
-            if '3' in prices:
-                queryset = queryset.filter(Q(price__gte=2001))
-        if sort == 'PRICE':
-            queryset = queryset.order_by('price')
-        if sort == 'NAME':
-            queryset = queryset.order_by('property')
-        if sort == 'CREATED':
-            queryset = queryset.order_by('created_at')
+            # Apply filters if they are present in the URL parameters
+            if search:
+                queryset = queryset.filter(property__icontains=search)
+            if property_type:
+                queryset = queryset.filter(property_type=property_type)
+            if city:
+                queryset = queryset.filter(city=city)
+            if price:
+                prices = price.split(',')
+                if '0' in prices:
+                    queryset = queryset.filter(Q(price__lte=500))
+                if '1' in prices:
+                    queryset = queryset.filter(Q(price__gte=501) & Q(price__lte=1200))
+                if '2' in prices:
+                    queryset = queryset.filter(Q(price__gte=1201) & Q(price__lte=2000))
+                if '3' in prices:
+                    queryset = queryset.filter(Q(price__gte=2001))
+            if sort == 'PRICE':
+                queryset = queryset.order_by('price')
+            if sort == 'NAME':
+                queryset = queryset.order_by('property')
+            if sort == 'CREATED':
+                queryset = queryset.order_by('created_at')
 
-        paginator = Paginator(queryset, per_page=3)  # Set the number of items per page
-        page_number = request.query_params.get('page', 1)
-        page_obj = paginator.get_page(page_number)
+            paginator = Paginator(queryset, per_page=3)  # Set the number of items per page
+            page_number = request.query_params.get('page', 1)
+            page_obj = paginator.get_page(page_number)
 
-        arrayData = []
-        for i in page_obj:
-            _dict = {
-                'id': i.id,
-                'property': i.property,
-                'host': i.host.id,
-                'location': dict(id=i.city.id, city=i.city.city, state_id=i.state.id, state=i.state.state),
-                'property_type': dict(id=i.property_type.id, name=i.property_type.name),
-                'total_bedrooms': i.total_bedrooms,
-                'summary': i.summary,
-                'address': i.address,
-                'price': i.price,
-                'hosted_since': i.hosted_since,
-                'created_at': i.created_at,
-                'updated_at': i.updated_at
-                # Add other fields as needed
+
+
+            arrayData = []
+            for i in page_obj:
+                _dict = {
+                    'id': i.id,
+                    'property': i.property,
+                    'host': i.host.id,
+                    'location': dict(id=i.city.id, city=i.city.city, state_id=i.state.id, state=i.state.state),
+                    'property_type': dict(id=i.property_type.id, name=i.property_type.name),
+                    'total_bedrooms': i.total_bedrooms,
+                    'summary': i.summary,
+                    'address': i.address,
+                    'price': i.price,
+                    'hosted_since': i.hosted_since,
+                    'created_at': i.created_at,
+                    'updated_at': i.updated_at,
+                    # 'total_rooms_booked': i.total_rooms_booked
+                    # Add other fields as needed
+                }
+                arrayData.append(_dict)
+                # Construct the final paginated response
+            response_data = {
+                'count': paginator.count,
+                'num_pages': paginator.num_pages,
+                'current_page': page_obj.number,
+                'data': arrayData,
             }
-            arrayData.append(_dict)
-            # Construct the final paginated response
-        response_data = {
-            'count': paginator.count,
-            'num_pages': paginator.num_pages,
-            'current_page': page_obj.number,
-            'data': arrayData,
-        }
-        return Response(response_data)
+            return Response(response_data)
 
+
+class BookingAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        auth_header = get_authorization_header(request).split()
+        token = auth_header[0].decode('utf-8')
+
+        if not token:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithm=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        serializer = BookingSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Booked Successfully"}, status=201)
+        return Response(serializer.errors, status=400)
 

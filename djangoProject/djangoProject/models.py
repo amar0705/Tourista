@@ -1,5 +1,6 @@
 # In your_app/models.py
 from django.db import models
+from django.utils import timezone
 
 
 class BlogPost(models.Model):
@@ -96,6 +97,24 @@ class Property(models.Model):
 
     def __str__(self):
         return self.property
+
+class Booking(models.Model):
+    guest = models.ForeignKey(Guest, on_delete=models.CASCADE)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE)
+    payment_status = models.CharField(max_length=200)
+    rooms_booked = models.IntegerField()
+    people = models.IntegerField()
+    stay_status = models.CharField(max_length=200)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    total_amount = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if self.end_date and self.end_date < timezone.now().date():
+            self.stay_status = 'CHECKED_OUT'
+        super().save(*args, **kwargs)
 
 
 class RevokedToken(models.Model):

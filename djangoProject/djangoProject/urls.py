@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from djangoProject.views import YourModelAPIView, HostAPIView, LoginAPIView, HostPropertyAPIView, LogoutAPIView, \
-    PropertyTypeAPIView, StateAPIView, CityAPIView, GuestAPIView, AllPropertiesAPIView
+    PropertyTypeAPIView, StateAPIView, CityAPIView, GuestAPIView, AllPropertiesAPIView, BookingAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,5 +30,6 @@ urlpatterns = [
     path('state/', StateAPIView.as_view()),
     path('city/', CityAPIView.as_view()),
     path('property_type/', PropertyTypeAPIView.as_view()),
-    path('properties/', AllPropertiesAPIView.as_view())
+    path('properties/', AllPropertiesAPIView.as_view()),
+    path('booking/', BookingAPIView.as_view())
 ]

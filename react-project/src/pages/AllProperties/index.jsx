@@ -31,14 +31,20 @@ import SortItems from "./SortItems";
 import { BASE_URL } from "../../api";
 import axios from "axios";
 import autocompleteRounded from "../../utils/autocompleteRounded";
+import BasicDateRangePicker from "../../components/DateRangePicker/dateRangePicker";
+import { useNavigate } from "react-router-dom";
+import moment from "moment";
 
 function AllProperties() {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [cityList, setCityList] = React.useState([]);
   const [propertyTypeList, setPropertyTypeList] = React.useState([]);
   const [allProperties, setAllProperties] = React.useState([]);
   const [page, setPage] = React.useState(1);
   const [pageData, setPageData] = React.useState(null);
+  var date = new Date();
+  const [dateRange, setDateRange] = React.useState([new Date(), date.setDate(date.getDate() + 1)]);
   const [filterValues, setFilterValues] = React.useState({
     search: "",
     sort: "",
@@ -138,7 +144,11 @@ function AllProperties() {
   const fetchProperties = async () => {
     await axios
       .get(
-        `${BASE_URL}/properties/?${getPropertyType()}${getLocation()}${getPrice()}${getSearch()}${getSort()}`
+        `${BASE_URL}/properties/?start_date=${moment(dateRange[0]).format(
+          "YYYY-MM-DD"
+        )}&end_date=${moment(dateRange[1]).format(
+          "YYYY-MM-DD"
+        )}${getPropertyType()}${getLocation()}${getPrice()}${getSearch()}${getSort()}`
       )
       .then((res) => {
         console.log();
@@ -166,8 +176,8 @@ function AllProperties() {
   };
 
   React.useEffect(() => {
-    fetchProperties();
-  }, []);
+    if (dateRange?.length > 0) fetchProperties();
+  }, [dateRange]);
 
   return (
     <Grid container gap={3}>
@@ -233,23 +243,26 @@ function AllProperties() {
         <Box
           sx={{ display: "flex", justifyContent: "space-between", flexDirection: "row", gap: 2 }}
         >
-          <TextField
-            id="search"
-            label="Search here"
-            size="small"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-              sx: { borderRadius: "30px" },
-            }}
-            value={filterValues.search}
-            onChange={(e) => {
-              setFilterValues({ ...filterValues, search: e.target.value });
-            }}
-          />
+          <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+            <TextField
+              id="search"
+              label="Search here"
+              size="small"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+                sx: { borderRadius: "30px" },
+              }}
+              value={filterValues.search}
+              onChange={(e) => {
+                setFilterValues({ ...filterValues, search: e.target.value });
+              }}
+            />
+            <BasicDateRangePicker value={dateRange} onChange={setDateRange}></BasicDateRangePicker>
+          </Box>
           <SortItems filterValues={filterValues} setFilterValues={setFilterValues}></SortItems>
         </Box>
         {allProperties?.length > 0 ? (
@@ -328,7 +341,15 @@ function AllProperties() {
                           </Typography>
                         </Box>
                       </Box>
-                      <Button variant="outlined" size="small">
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={() => {
+                          navigate(`/booking/${item.id}`, {
+                            state: { start_date: dateRange[0], end_date: dateRange[1] },
+                          });
+                        }}
+                      >
                         Book Now
                       </Button>
                     </Box>

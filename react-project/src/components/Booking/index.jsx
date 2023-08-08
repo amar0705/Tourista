@@ -25,12 +25,22 @@ import DoorSlidingIcon from "@mui/icons-material/DoorSliding";
 import BedIcon from "@mui/icons-material/Bed";
 import LightIcon from "@mui/icons-material/Light";
 import { useState } from "react";
+import { BASE_URL } from "../../api";
+import axios from "axios";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import moment from "moment";
 
 function Booking() {
   const [values, setValues] = useState({
     rooms: 1,
     people: 1,
   });
+  const params = useParams();
+  const location = useLocation();
+  const [property, setProperty] = useState({});
+  const [nights, setNights] = useState(0);
+  const navigate = useNavigate();
+
   const amenities = [
     [
       { id: 1, icon: <TvIcon />, name: "Television" },
@@ -47,6 +57,62 @@ function Booking() {
       { id: 5, icon: <LightIcon />, name: "Bed Table" },
     ],
   ];
+
+  React.useEffect(() => {
+    fetchPropertyDetails();
+  }, []);
+
+  React.useEffect(() => {
+    if (location?.state) {
+      console.log(moment(location.state?.end_date).format("YYYY-MM-DD"), location.state);
+      var date1 = new Date(moment(location.state?.start_date).format("YYYY-MM-DD"));
+      var date2 = new Date(moment(location.state?.end_date).format("YYYY-MM-DD"));
+      var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+      var numberOfNights = Math.ceil(timeDiff / (1000 * 3600 * 24));
+      console.log(numberOfNights);
+      setNights(numberOfNights);
+    }
+  }, [location?.state]);
+
+  const fetchPropertyDetails = async () => {
+    await axios
+      .get(`${BASE_URL}/properties/?property_id=${params.property_id}`)
+      .then((res) => {
+        setProperty(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const bookProperty = async () => {
+    if (localStorage.getItem("token")) {
+      const obj = {
+        guest: Number(localStorage.getItem("user_id")),
+        property: Number(params.property_id),
+        payment_status: "PAID",
+        rooms_booked: values.rooms,
+        people: values.people,
+        stay_status: "PENDING",
+        start_date: moment(location.state?.start_date).format("YYYY-MM-DD"),
+        end_date: moment(location.state?.end_date).format("YYYY-MM-DD"),
+        total_amount: values.rooms * Number(property?.price) * Number(nights),
+      };
+      await axios
+        .post(`${BASE_URL}/booking/`, obj, {
+          headers: { Authorization: localStorage.getItem("token") },
+        })
+        .then((res) => {
+          navigate("/all-properties");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      navigate("/guest/login");
+    }
+  };
+
   return (
     <>
       <Grid container spacing={3}>
@@ -63,13 +129,13 @@ function Booking() {
           <Paper elevation={3} sx={{ height: "70vh", padding: "20px" }}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
               <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                <Typography variant="h5">The Cliff Garden</Typography>
+                <Typography variant="h5">{property.property}</Typography>
                 <Box
                   sx={{ display: "flex", flexDirection: "row", gap: "5px", alignItems: "center" }}
                 >
                   <FmdGoodIcon />
                   <Typography variant="body2" color="text.secondary">
-                    TCG, Pune
+                    {property?.location?.city}, {property?.location?.state}
                   </Typography>
                 </Box>
               </Box>
@@ -207,15 +273,23 @@ function Booking() {
               <Divider></Divider>
               <Box sx={{ display: "flex", justifyContent: "space-between" }} mt={2}>
                 <Typography variant="p" color="text.secondary">
-                  Total Payable Amount: <b>₹{values.rooms * 1200}</b>
+                  Total Payable Amount:{" "}
+                  <b>₹{values.rooms * Number(property?.price) * Number(nights)}</b>
                 </Typography>
-                <Button
-                  variant="contained"
-                  sx={{ borderRadius: "5px", backgroundColor: "#1bb389" }}
-                  size="medium"
-                >
-                  Pay Now
-                </Button>{" "}
+                {location.state && (
+                  <>
+                    <Button
+                      variant="contained"
+                      sx={{ borderRadius: "5px", backgroundColor: "#1bb389" }}
+                      size="medium"
+                      onClick={() => {
+                        bookProperty();
+                      }}
+                    >
+                      Pay Now
+                    </Button>
+                  </>
+                )}
               </Box>
             </Box>
           </Paper>

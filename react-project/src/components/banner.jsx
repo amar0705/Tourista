@@ -11,6 +11,8 @@ import cover from "../assets/cover-image-hd.png";
 export default function Banner() {
   const [cityList, setCityList] = React.useState([]);
   const [filterValues, setFilterValues] = React.useState({ city: null });
+  var date = new Date();
+  const [dateRange, setDateRange] = React.useState([new Date(), date.setDate(date.getDate() + 1)]);
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -120,7 +122,10 @@ export default function Banner() {
               />
             </Grid>
             <Grid item md={3}>
-              <BasicDateRangePicker></BasicDateRangePicker>
+              <BasicDateRangePicker
+                value={dateRange}
+                onChange={setDateRange}
+              ></BasicDateRangePicker>
             </Grid>
             <Grid item md={3}>
               <TextField

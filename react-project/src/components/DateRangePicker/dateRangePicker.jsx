@@ -4,12 +4,10 @@ import "@wojtekmaj/react-daterange-picker/dist/DateRangePicker.css";
 import "react-calendar/dist/Calendar.css";
 import "./styles.css";
 
-export default function BasicDateRangePicker() {
-  const [value, onChange] = useState([new Date(), new Date()]);
-
+export default function BasicDateRangePicker({ value, onChange }) {
   return (
     <div>
-      <DateRangePicker onChange={onChange} value={value} />
+      <DateRangePicker onChange={onChange} value={value} clearIcon="" minDate={new Date()} />
     </div>
   );
 }

@@ -58,7 +58,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/booking",
+    path: "/booking/:property_id",
     element: (
       <HomeLayout makeMargin={true}>
         <Booking></Booking>
