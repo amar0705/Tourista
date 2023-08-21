@@ -32,7 +32,7 @@ import { BASE_URL } from "../../api";
 import axios from "axios";
 import autocompleteRounded from "../../utils/autocompleteRounded";
 import BasicDateRangePicker from "../../components/DateRangePicker/dateRangePicker";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 
 function AllProperties() {
@@ -44,6 +44,7 @@ function AllProperties() {
   const [page, setPage] = React.useState(1);
   const [pageData, setPageData] = React.useState(null);
   var date = new Date();
+  const location = useLocation();
   const [dateRange, setDateRange] = React.useState([new Date(), date.setDate(date.getDate() + 1)]);
   const [filterValues, setFilterValues] = React.useState({
     search: "",
@@ -62,6 +63,10 @@ function AllProperties() {
     fetchCity();
     fetchPropertyType();
   }, []);
+  React.useEffect(() => {
+    setDateRange(location?.state?.dateRange);
+    setFilterValues({ ...filterValues, city: location?.state?.city });
+  }, [location]);
 
   const fetchCity = async () => {
     await axios
@@ -151,7 +156,6 @@ function AllProperties() {
         )}${getPropertyType()}${getLocation()}${getPrice()}${getSearch()}${getSort()}`
       )
       .then((res) => {
-        console.log();
         setAllProperties(res.data.data);
         setPageData(res.data);
       })

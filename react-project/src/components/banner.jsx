@@ -149,7 +149,12 @@ export default function Banner() {
                 variant="contained"
                 sx={{ borderRadius: "30px", width: "100%", backgroundColor: "#1bb389" }}
                 onClick={() => {
-                  navigate("/all-properties");
+                  navigate("/all-properties", {
+                    state: {
+                      dateRange: dateRange,
+                      city: filterValues?.city,
+                    },
+                  });
                 }}
               >
                 Search

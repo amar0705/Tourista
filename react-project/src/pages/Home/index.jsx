@@ -18,11 +18,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../api";
 import axios from "axios";
 import Footer from "../../components/footer";
+import { alert } from "../../components/alerts";
+import { useSnackbar } from "../../App";
 
 const pages = [{ title: "All Properties", link: "/all-properties" }];
 const settings = ["Profile", "Logout"];
 
 function HomeLayout({ children, makeMargin }) {
+  const { showAlert } = useSnackbar();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
@@ -55,12 +58,15 @@ function HomeLayout({ children, makeMargin }) {
         headers: { Authorization: localStorage.getItem("token") },
       });
       console.log(result);
+      alert.error("Logged out");
       navigate("/");
       localStorage.removeItem("token");
       localStorage.removeItem("user_id");
       localStorage.removeItem("user_type");
+      showAlert("success", "Logged out successfully!!!");
     } catch (error) {
       console.log(error);
+      showAlert("error", error?.response?.data?.detail ?? "Some error occurred!!");
     }
   };
 

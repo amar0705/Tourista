@@ -76,7 +76,11 @@ function Booking() {
 
   const fetchPropertyDetails = async () => {
     await axios
-      .get(`${BASE_URL}/properties/?property_id=${params.property_id}`)
+      .get(
+        `${BASE_URL}/properties/?property_id=${params.property_id}&start_date=${moment(
+          location.state?.start_date
+        ).format("YYYY-MM-DD")}&end_date=${moment(location.state?.end_date).format("YYYY-MM-DD")}`
+      )
       .then((res) => {
         setProperty(res.data);
       })
@@ -199,6 +203,7 @@ function Booking() {
                     InputProps={{
                       inputProps: {
                         min: 1,
+                        max: property?.total_bedrooms - property?.total_rooms_booked,
                         onKeyDown: (event) => {
                           event.preventDefault();
                         },
@@ -212,6 +217,9 @@ function Booking() {
                   <IconButton
                     aria-label="delete"
                     size="small"
+                    disabled={
+                      values.rooms >= property?.total_bedrooms - property?.total_rooms_booked
+                    }
                     onClick={() => {
                       setValues({ ...values, rooms: Number(values.rooms) + 1 });
                     }}

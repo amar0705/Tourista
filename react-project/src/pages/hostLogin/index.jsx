@@ -17,6 +17,7 @@ import { callApi } from "../../api";
 import { useState } from "react";
 import _ from "lodash";
 import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "../../App";
 
 function Copyright(props) {
   return (
@@ -36,6 +37,7 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function HostLogin({ userType }) {
+  const { showAlert } = useSnackbar();
   const history = useNavigate();
   const [errorStates, setErrorStates] = useState({
     email: "",
@@ -95,8 +97,9 @@ export default function HostLogin({ userType }) {
       localStorage.setItem("user_type", userType);
 
       history(userType === "HOST" ? "/host/property-details" : "/all-properties");
+      showAlert("success", "Logged in successfully!!!");
     } catch (error) {
-      console.log(error);
+      showAlert("error", error?.response?.data?.detail ?? "Some error occurred!!");
     }
   };
 
